@@ -14,4 +14,5 @@ This repository is dedicated for storing my own CTF Solutions from various CTF C
 1. The flag (The instructions are literally there, don't be lazy)
 2. Extracted files
 
+* Note: still adding solutions from my OG WriteUp document *
 
