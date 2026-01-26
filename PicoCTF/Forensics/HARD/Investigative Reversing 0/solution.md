@@ -1,4 +1,4 @@
-<img width="657" height="260" alt="image" src="https://github.com/user-attachments/assets/10074461-8855-4155-a2f9-854f9f2f9892" /># PROBLEM
+# PROBLEM
 
 <img width="594" height="102" alt="image" src="https://github.com/user-attachments/assets/99080d20-2661-43bb-acdc-7976c305ba5e" />
 
@@ -54,7 +54,6 @@ After the IEND, we found this text
 
 This *looks* like our flag but it is not our flag just yet. Let us investigate the binary file more
 
-<img width="375" height="24" alt="image" src="https://github.com/user-attachments/assets/d7dd4bdd-656b-4752-ab99-2ddbe088e6a2" />
 
 The file contents of **flag.txt** was stored inside a char array called *local_38*
 
@@ -85,4 +84,5 @@ Now it is just a matter of decoding the text based on the clues. Let's make a si
 <img width="456" height="322" alt="image" src="https://github.com/user-attachments/assets/ef6e9bc0-22a7-4a80-893f-3fb23eac18a2" />
 
 Then swap '(' to '{' to follow the picoCTF format, and there's your flag
+
 
