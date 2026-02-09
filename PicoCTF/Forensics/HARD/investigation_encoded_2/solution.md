@@ -56,6 +56,8 @@ Analyze the File. In Analysis, select Auto Analysis to analyze the file
 
 You should now be able to decompile the file.
 
+## Main Function Analysis
+
 <img width="943" height="785" alt="image" src="https://github.com/user-attachments/assets/c6364d9a-4aab-4b38-9822-80300e31fff1" />
 
 Look at the main function. They opened a file "flag.txt" in read mode
@@ -66,7 +68,7 @@ A set of interesting operations were done here
 
 <img width="258" height="119" alt="image" src="https://github.com/user-attachments/assets/cd9f6d17-e46e-4267-8d2e-bdf154f1be8e" />
 
-First, they used fseek(). fseek() is used to move the file pointer from one byte to another. fseek() is defined like this
+First, they used *fseek()*. *fseek()* is used to move the file pointer from one byte to another. *fseek()* is defined like this
 
           int fseek(FILE *stream, long offset, int whence)
 
@@ -74,13 +76,42 @@ First, they used fseek(). fseek() is used to move the file pointer from one byte
 `offset: the amount in bytes to offset the file pointer`
 `whence: an ENUM, used to identify the beginning of the offset`
 
-The **whence** parameter accepts 3 possible values. SEEK_SET (0), SEEK_CUR (1), and SEEK_END (2). Here, they used SEEK_END, meaning the pointer was moved to the end of the file.
+The **whence** parameter accepts 3 possible values. `SEEK_SET` (0), `SEEK_CUR` (1), and `SEEK_END` (2). Here, they used `SEEK_END`, meaning the pointer was moved to the end of the file.
 
-Then they stored the file pointer location using ftell() to 1Var1. The flag_size is then set to 1Var1.
+Then they stored the file pointer location using *ftell()* to **1Var1**. The **flag_size** is then set to **1Var1**.
 
 <img width="726" height="228" alt="image" src="https://github.com/user-attachments/assets/0de1eabe-c6d4-44cf-854d-d0abfc90b479" />
 
-This section above tells us that the flag_size must be 10.
+This section above tells us that the **flag_size** must be 10.
+
+Some variables are initialized, mainly the output file and the **flag_index**
+
+<img width="309" height="136" alt="image" src="https://github.com/user-attachments/assets/776c0495-4bf0-4c6a-a71b-0ee3d25089c1" />
+
+And then an *encode()* function is called, likely to write the flag to our output file
+
+<img width="167" height="48" alt="image" src="https://github.com/user-attachments/assets/0e1af5c6-ddf8-49c7-8b56-0154faf4a602" />
+
+## Encode Function Analysis
+
+The *encode()* function has a conditional while loop inside
+
+<img width="799" height="661" alt="image" src="https://github.com/user-attachments/assets/fc496115-c1b8-4ad8-ba8c-b4dc8e15310b" />
+
+Let's dissect this while loop to understand what is happening to our flag.
+
+The condition is here. Recall that **flag_size** is set to 10.
+
+<img width="329" height="32" alt="image" src="https://github.com/user-attachments/assets/42f6f283-159f-4862-ad07-00e77fb9dc3e" />
+
+The update is not bound by soem condition
+
+<img width="301" height="25" alt="image" src="https://github.com/user-attachments/assets/4e4c8543-dd2b-4e22-bcb1-2aa73126be35" />
+
+This means our while loops has to occur only 10 times.
+
+A char variale is initialized 
+
 
 
 
