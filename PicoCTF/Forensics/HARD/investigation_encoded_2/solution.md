@@ -110,8 +110,125 @@ The update is not bound by soem condition
 
 This means our while loops has to occur only 10 times.
 
-A char variale is initialized 
+A char variale is initialized. It is the nth char in our flag, but it is the output of a function *lower*
+
+<img width="486" height="24" alt="image" src="https://github.com/user-attachments/assets/0c0d5749-ea0a-4229-b865-1d64880a8a08" />
+
+This is not the same as *toLower()* of *stdio.h*, this is a custom one. Let us dissect it.
+
+### Lower Function Analysis
+
+<img width="502" height="304" alt="image" src="https://github.com/user-attachments/assets/07b950de-bcd8-4528-825d-1f429b90c11f" />
+
+It seems to function just the same as *toLower()*
+
+Next we will look at how it encodes the characters. The first section is this
+
+<img width="267" height="70" alt="image" src="https://github.com/user-attachments/assets/28441381-9c32-4242-a73e-b9eaf5828b55" />
+
+Whitespaces are offset by '-0x7b'
+
+<img width="453" height="69" alt="image" src="https://github.com/user-attachments/assets/2b32f76d-bf7e-4359-9a99-b4815e72d348" />
+
+Characters between '/' and ':' are offset by +'K'
+
+<img width="313" height="21" alt="image" src="https://github.com/user-attachments/assets/95b85a48-a910-4c25-890e-6a99c1f1741b" />
+
+Then every character is offset by '-0x71'
+
+<img width="438" height="71" alt="image" src="https://github.com/user-attachments/assets/ba4675a6-05e6-4bdf-bd07-9afc8c952436" />
+
+Then it checks for 'badChar'. Negative numbers are labeled as 'badChar', same as chars greater than '$'. This happens after the first encoding
+
+<img width="413" height="115" alt="image" src="https://github.com/user-attachments/assets/a44a9e31-2cfb-4fef-9cdc-9f5a2e96e17e" />
+
+Then it finds all chars that are not '$'. It does some crazy offsetting
+
+<img width="309" height="23" alt="image" src="https://github.com/user-attachments/assets/f8d92629-33d0-40d0-b46b-0674b8c88625" />
+
+First it adds 0x12, then MODs it by 0x24.
+
+<img width="308" height="22" alt="image" src="https://github.com/user-attachments/assets/eb51ee75-856d-46ba-99a8-a881f18b359e" />
+
+Then it bitshifts it by 0x1f
+
+<img width="390" height="25" alt="image" src="https://github.com/user-attachments/assets/dcf23b3e-79ad-45db-92e7-b0e56953b2ac" />
+
+Finally, the char is computed by this line.
+
+<img width="514" height="19" alt="image" src="https://github.com/user-attachments/assets/abde6dae-2b09-47e0-b845-2c5837a8f39a" />
+
+Then it computes this value iVar3
+
+<img width="760" height="117" alt="image" src="https://github.com/user-attachments/assets/1f09506d-38fb-47e0-bc4e-c83bca19e5e5" />
+
+Then this for loop, occurs. I am not exactly sure of how this works, there are variables here that can't be found anywhere
+
+<img width="276" height="24" alt="image" src="https://github.com/user-attachments/assets/c9eb4f34-7b7a-4610-89f7-e0cda77ade74" />
+
+This section of the for loop computes some kind of value. Let us investigate this function.
+
+### GetValue Function Analysis
+
+<img width="797" height="300" alt="image" src="https://github.com/user-attachments/assets/cde0495f-9e52-4560-8908-c633fcb5d061" />
+
+I notice that it returns an unsigned int. There's also this section:
+
+<img width="229" height="61" alt="image" src="https://github.com/user-attachments/assets/74a1d9fb-9534-48f3-bc30-2153a644e431" />
+
+It adds 7 to negative values. This could mean that negative numbers are only upto -7
+
+<img width="789" height="24" alt="image" src="https://github.com/user-attachments/assets/7ec3e9af-11a7-4d1e-8f71-b7d0848b161e" />
+
+Then we have this section with plenty of bit manipulations
+
+<img width="141" height="28" alt="image" src="https://github.com/user-attachments/assets/67fda776-1293-4d6a-b55f-f4c451df5c5b" />
+
+Then it runs this *save()* function
+
+### Save Function Analysis
+
+<img width="359" height="351" alt="image" src="https://github.com/user-attachments/assets/508a7bc6-4362-4447-b25b-bf256512eedb" />
+
+The purpose of this function is to save the characters to the output file.
+
+<img width="318" height="26" alt="image" src="https://github.com/user-attachments/assets/912bb35b-9a62-4ba8-ab5e-e3db685f3f90" />
+
+It runs bit manipulation on the buffChar
+
+<img width="353" height="112" alt="image" src="https://github.com/user-attachments/assets/855aaffe-c848-4985-b6f2-42f44a0d83dd" />
+
+Then it tries to save it when remain is 0
+
+<img width="313" height="96" alt="image" src="https://github.com/user-attachments/assets/7650e378-42d4-44fa-8f22-2ec24bc89e0d" />
+
+If remains is not 0, it multiplies tha value by 0x02
+
+Outside the while loop, it tries to run this
+
+<img width="301" height="71" alt="image" src="https://github.com/user-attachments/assets/03c9f715-f71f-4297-823b-a0767cd8a854" />
+
+## Testing the Executable
+
+Before we can reverse engineer it, let us run the executable using our own flag. I moved the executable to its own folder. 
+
+With a flag content of 10 zeroes, this is what we get:
+
+<img width="158" height="34" alt="image" src="https://github.com/user-attachments/assets/a1f8d9f8-26e8-48fd-a2aa-bf3abc55a89b" />
+
+With 10 'a', it gives us this
+
+<img width="191" height="28" alt="image" src="https://github.com/user-attachments/assets/be04daa9-c62d-4e2a-a60d-d75063521dc0" />
+
+With 10 'z', we get this
+
+<img width="316" height="42" alt="image" src="https://github.com/user-attachments/assets/a278e1df-11e5-4976-83ca-87de8053f4e8" />
 
 
+The behavior of this is clear, each flag character is offset so much it goes beyond the 8 bit ASCII limit, which is why there is an overflow and why it displayes UNICODE characters instead
+
+## Reversing
+
+I will write a Python script that reverses the contents of the output file.
 
 
